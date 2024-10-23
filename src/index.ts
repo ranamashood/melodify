@@ -16,6 +16,8 @@ app.get("/get-all-songs", (req: Request, res: Response) => {
   fs.readdir("./public/uploads/", (err, songs) => res.json({ songs }));
 });
 
+app.use("/songs", express.static("public/uploads"));
+
 io.on("connection", (socket) => {
   console.log("Socket connected.");
 });

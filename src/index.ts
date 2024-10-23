@@ -8,7 +8,11 @@ const PORT = 5000;
 
 const app: Application = express();
 const server: http.Server = http.createServer(app);
-const io: Server = new Server(server);
+const io: Server = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.use(cors());
 
@@ -19,9 +23,9 @@ app.get("/get-all-songs", (req: Request, res: Response) => {
 app.use("/songs", express.static("public/uploads"));
 
 io.on("connection", (socket) => {
-  console.log("Socket connected.");
+  socket.on("current-song", (currentSong: string) => {
+    io.emit("new-song", currentSong);
+  });
 });
 
-server.listen(PORT, () =>
-  console.log(`Server running on port http://localhost:${PORT}`),
-);
+server.listen(PORT);

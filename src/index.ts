@@ -23,6 +23,12 @@ app.get("/get-all-songs", (req: Request, res: Response) => {
 app.use("/songs", express.static("public/uploads"));
 
 io.on("connection", (socket) => {
+  io.emit("sockets", Array.from(io.sockets.sockets.keys()));
+
+  socket.on("disconnect", () => {
+    io.emit("sockets", Array.from(io.sockets.sockets.keys()));
+  });
+
   socket.on("current-song", (currentSong: string) => {
     io.emit("new-song", currentSong);
   });

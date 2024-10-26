@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 import http from "http";
 import fs from "fs";
 import cors from "cors";
+import { loadMusicMetadata } from "music-metadata";
+import { SongInterface } from "./models";
 
 const PORT = 5000;
 
@@ -18,6 +20,23 @@ app.use(cors());
 
 app.get("/get-all-songs", (req: Request, res: Response) => {
   fs.readdir("./public/uploads/", (err, songs) => res.json({ songs }));
+});
+
+app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
+  const { songName } = req.params;
+  const songPath = `./public/uploads/${songName}`;
+  const musicMetadata = await loadMusicMetadata();
+  const metadata = await musicMetadata.parseFile(songPath);
+
+  const song: SongInterface = {
+    title: metadata.common.title ?? "Unknown",
+    artist: metadata.common.artist ?? "Unknown",
+    image: metadata.common.picture
+      ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
+      : "",
+  };
+
+  res.json(song);
 });
 
 app.use("/songs", express.static("public/uploads"));

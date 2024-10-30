@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import { Server } from "socket.io";
 import http from "http";
 import fs from "fs";
+import { promisify } from "util";
 import cors from "cors";
 import { loadMusicMetadata } from "music-metadata";
 import { SongInterface } from "./models";
@@ -18,8 +19,30 @@ const io: Server = new Server(server, {
 
 app.use(cors());
 
-app.get("/get-all-songs", (req: Request, res: Response) => {
-  fs.readdir("./public/uploads/", (err, songs) => res.json({ songs }));
+app.get("/get-all-songs", async (req: Request, res: Response) => {
+  const songs: SongInterface[] = [];
+
+  const readdir = promisify(fs.readdir);
+
+  const songsPath: string[] = await readdir("./public/uploads/");
+
+  const musicMetadata = await loadMusicMetadata();
+
+  for (const songPath of songsPath) {
+    const songFullPath = `./public/uploads/${songPath}`;
+    const metadata = await musicMetadata.parseFile(songFullPath);
+    const song: SongInterface = {
+      filename: songPath,
+      title: metadata.common.title ?? "Unknown",
+      artist: metadata.common.artist ?? "Unknown",
+      image: metadata.common.picture
+        ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
+        : "",
+    };
+    songs.push(song);
+  }
+
+  res.json({ songs });
 });
 
 app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
@@ -29,6 +52,7 @@ app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
   const metadata = await musicMetadata.parseFile(songPath);
 
   const song: SongInterface = {
+    filename: songName,
     title: metadata.common.title ?? "Unknown",
     artist: metadata.common.artist ?? "Unknown",
     image: metadata.common.picture

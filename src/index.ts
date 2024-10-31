@@ -31,15 +31,22 @@ app.get("/get-all-songs", async (req: Request, res: Response) => {
   for (const songPath of songsPath) {
     const songFullPath = `./public/uploads/${songPath}`;
     const metadata = await musicMetadata.parseFile(songFullPath);
-    const song: SongInterface = {
-      filename: songPath,
-      title: metadata.common.title ?? "Unknown",
-      artist: metadata.common.artist ?? "Unknown",
-      image: metadata.common.picture
-        ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
-        : "",
-    };
-    songs.push(song);
+    let creationTime: number = 0;
+
+    fs.stat(songFullPath, (_, stats) => {
+      creationTime = stats.ctimeMs;
+
+      const song: SongInterface = {
+        filename: songPath,
+        title: metadata.common.title ?? "Unknown",
+        artist: metadata.common.artist ?? "Unknown",
+        image: metadata.common.picture
+          ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
+          : "",
+        uploadedTime: creationTime,
+      };
+      songs.push(song);
+    });
   }
 
   res.json({ songs });
@@ -50,17 +57,23 @@ app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
   const songPath = `./public/uploads/${songName}`;
   const musicMetadata = await loadMusicMetadata();
   const metadata = await musicMetadata.parseFile(songPath);
+  let creationTime: number = 0;
 
-  const song: SongInterface = {
-    filename: songName,
-    title: metadata.common.title ?? "Unknown",
-    artist: metadata.common.artist ?? "Unknown",
-    image: metadata.common.picture
-      ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
-      : "",
-  };
+  fs.stat(songPath, (_, stats) => {
+    creationTime = stats.ctimeMs;
 
-  res.json(song);
+    const song: SongInterface = {
+      filename: songName,
+      title: metadata.common.title ?? "Unknown",
+      artist: metadata.common.artist ?? "Unknown",
+      image: metadata.common.picture
+        ? `data:${metadata.common.picture[0].format};base64,${Buffer.from(metadata.common.picture[0].data).toString("base64")}`
+        : "",
+      uploadedTime: creationTime,
+    };
+
+    res.json(song);
+  });
 });
 
 app.use("/songs", express.static("public/uploads"));

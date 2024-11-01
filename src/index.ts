@@ -88,6 +88,9 @@ io.on("connection", (socket) => {
   socket.on("current-song", (currentSong: string) => {
     io.emit("new-song", currentSong);
   });
+
+  socket.on("pause", () => io.emit("pause"));
+  socket.on("play", () => io.emit("play"));
 });
 
 server.listen(PORT);

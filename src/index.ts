@@ -66,6 +66,8 @@ io.on("connection", (socket) => {
 
   socket.on("pause", () => io.emit("pause"));
   socket.on("play", () => io.emit("play"));
+
+  socket.on("change-seek", (newSeek: number) => io.emit("new-seek", newSeek));
 });
 
 connectToDatabase().then(() => {
@@ -121,6 +123,7 @@ connectToDatabase().then(() => {
         artist: metadata.common.artist ?? "Unknown",
         image: imagePath.replace("./public/uploads/images/", ""),
         thumbnail: thumbnailPath.replace("./public/uploads/images/", ""),
+        duration: metadata.format.duration || 0,
         uploadedTime: creationTime,
       };
 

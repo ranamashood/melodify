@@ -24,12 +24,12 @@ const io: Server = new Server(server, {
 
 app.use(cors());
 
-app.get("/get-all-songs", async (req: Request, res: Response) => {
+app.get("/songs", async (req: Request, res: Response) => {
   const songs = await collections.songs.find<Song>({}).toArray();
   res.json(songs);
 });
 
-app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
+app.get("/songs/:songName", async (req: Request, res: Response) => {
   const { songName } = req.params;
 
   const song = await collections.songs.findOne<Song>({ filename: songName });
@@ -46,8 +46,8 @@ app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
 //   res.json(response.data);
 // });
 
-app.use("/songs", express.static("public/uploads/songs"));
-app.use("/images", express.static("public/uploads/images"));
+app.use("/uploads/songs", express.static("public/uploads/songs"));
+app.use("/uploads/images", express.static("public/uploads/images"));
 
 io.on("connection", (socket) => {
   io.emit("sockets", Array.from(io.sockets.sockets.keys()));

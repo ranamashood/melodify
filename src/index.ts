@@ -7,9 +7,7 @@ import { promisify } from "util";
 import cors from "cors";
 import { loadMusicMetadata } from "music-metadata";
 import { SongInterface } from "./models";
-import { connectToDatabase } from "./services/database.service";
-import { songsRouter } from "./routes/songs.router";
-import axios from "axios";
+import { collections, connectToDatabase } from "./services/database.service";
 import "dotenv/config";
 import sharp from "sharp";
 import Song from "./models/song";
@@ -27,17 +25,15 @@ const io: Server = new Server(server, {
 app.use(cors());
 
 app.get("/get-all-songs", async (req: Request, res: Response) => {
-  const response = await axios.get<Song[]>(`${process.env.API_URL}/api/songs/`);
-  res.json(response.data);
+  const songs = await collections.songs.find<Song>({}).toArray();
+  res.json(songs);
 });
 
 app.get("/song-metadata/:songName", async (req: Request, res: Response) => {
   const { songName } = req.params;
 
-  const response = await axios.get<Song>(
-    `${process.env.API_URL}/api/songs/filename/${songName}`,
-  );
-  res.json(response.data);
+  const song = await collections.songs.findOne<Song>({ filename: songName });
+  res.json(song);
 });
 
 // TODO: switch from songName to id
@@ -71,8 +67,6 @@ io.on("connection", (socket) => {
 });
 
 connectToDatabase().then(() => {
-  app.use("/api/songs", songsRouter);
-
   const updateDatabase = async () => {
     const lastUpdated: number = 0;
 
@@ -127,7 +121,7 @@ connectToDatabase().then(() => {
         uploadedTime: creationTime,
       };
 
-      await axios.post(`${process.env.API_URL}/api/songs/`, song);
+      await collections.songs.insertOne(song);
     }
   };
 

@@ -1,8 +1,9 @@
 import * as mongoDB from "mongodb";
 import "dotenv/config";
+import Song from "../models/song";
 
 export const collections = {
-  songs: {} as mongoDB.Collection,
+  songs: {} as mongoDB.Collection<Song>,
 };
 
 export async function connectToDatabase() {
@@ -14,11 +15,9 @@ export async function connectToDatabase() {
 
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
-  const songsCollection: mongoDB.Collection = db.collection("songs");
+  const songsCollection: mongoDB.Collection<Song> = db.collection("songs");
 
   collections.songs = songsCollection;
 
-  console.log(
-    `Successfully connected to database: ${db.databaseName} and collection: ${songsCollection.collectionName}`,
-  );
+  console.log(`Successfully connected to database: ${db.databaseName}`);
 }

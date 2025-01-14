@@ -10,7 +10,6 @@ import { SongInterface } from "./models";
 import { collections, connectToDatabase } from "./services/database.service";
 import "dotenv/config";
 import sharp from "sharp";
-import Song from "./models/song";
 import { ObjectId } from "mongodb";
 
 const PORT = 5000;
@@ -26,14 +25,14 @@ const io: Server = new Server(server, {
 app.use(cors());
 
 app.get("/songs", async (req: Request, res: Response) => {
-  const songs = await collections.songs.find<Song>({}).toArray();
+  const songs = await collections.songs.find({}).toArray();
   res.json(songs);
 });
 
 app.get("/songs/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const song = await collections.songs.findOne<Song>({ _id: new ObjectId(id) });
+  const song = await collections.songs.findOne({ _id: new ObjectId(id) });
   res.json(song);
 });
 

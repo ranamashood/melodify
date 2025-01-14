@@ -11,6 +11,7 @@ import { collections, connectToDatabase } from "./services/database.service";
 import "dotenv/config";
 import sharp from "sharp";
 import Song from "./models/song";
+import { ObjectId } from "mongodb";
 
 const PORT = 5000;
 
@@ -29,10 +30,10 @@ app.get("/songs", async (req: Request, res: Response) => {
   res.json(songs);
 });
 
-app.get("/songs/:songName", async (req: Request, res: Response) => {
-  const { songName } = req.params;
+app.get("/songs/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-  const song = await collections.songs.findOne<Song>({ filename: songName });
+  const song = await collections.songs.findOne<Song>({ _id: new ObjectId(id) });
   res.json(song);
 });
 

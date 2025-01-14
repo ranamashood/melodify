@@ -37,16 +37,6 @@ app.get("/songs/:id", async (req: Request, res: Response) => {
   res.json(song);
 });
 
-// TODO: switch from songName to id
-// app.get("/song-metadata/:id", async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//
-//   const response = await axios.get<Song>(
-//     `${process.env.API_URL}/api/songs/${id}`,
-//   );
-//   res.json(response.data);
-// });
-
 app.use("/uploads/songs", express.static("public/uploads/songs"));
 app.use("/uploads/images", express.static("public/uploads/images"));
 

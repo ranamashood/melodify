@@ -8,10 +8,13 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
+import { Request, Response } from 'express';
 
 @Controller('songs')
 export class SongsController {
@@ -35,7 +38,16 @@ export class SongsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.songsService.findOne(+id);
+    return this.songsService.findOne(id);
+  }
+
+  @Get(':id/stream')
+  streamSong(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return this.songsService.streamSong(id, req, res);
   }
 
   @Patch(':id')

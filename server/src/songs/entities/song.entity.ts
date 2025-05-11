@@ -5,6 +5,24 @@ export type SongDocument = HydratedDocument<Song>;
 
 @Schema()
 export class Song {
+  @Prop()
+  title: string;
+
+  @Prop()
+  artist: string;
+
+  @Prop()
+  artists: string[];
+
+  @Prop()
+  duration: number;
+
+  @Prop()
+  imagePath: string;
+
+  @Prop()
+  thumbnailPath: string;
+
   @Prop({ required: true })
   filename: string;
 

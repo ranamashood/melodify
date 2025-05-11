@@ -12,7 +12,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { SongsService } from './songs.service';
-import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 import { Request, Response } from 'express';
 
@@ -24,11 +23,6 @@ export class SongsController {
   @HttpCode(HttpStatus.CREATED)
   async scanMusicDirectory() {
     return this.songsService.scanMusicDirectory();
-  }
-
-  @Post()
-  create(@Body() createSongDto: CreateSongDto) {
-    return this.songsService.create(createSongDto);
   }
 
   @Get()

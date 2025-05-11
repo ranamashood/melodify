@@ -7,6 +7,8 @@ import { Model } from 'mongoose';
 import { Song } from './entities/song.entity';
 import { createReadStream } from 'node:fs';
 import { Request, Response } from 'express';
+import { parseFile, selectCover } from 'music-metadata';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class SongsService {
@@ -23,16 +25,7 @@ export class SongsService {
       (songFilename) => !dbSongsSet.has(songFilename),
     );
 
-    addedFiles.forEach(async (addedFile) => {
-      const stats = await stat(`public/uploads/songs/${addedFile}`);
-
-      const song = {
-        filename: addedFile,
-        birthtimeMs: stats.birthtimeMs,
-      };
-
-      this.create(song);
-    });
+    addedFiles.forEach((addedFile) => this.create(addedFile));
 
     const deletedFiles = dbSongs.filter(
       (dbFile) => !dirSongsSet.has(dbFile.filename),
@@ -46,8 +39,46 @@ export class SongsService {
     };
   }
 
-  create(createSongDto: CreateSongDto) {
-    const createdSong = new this.songModel(createSongDto);
+  async create(filename: string) {
+    const stats = await stat(`public/uploads/songs/${filename}`);
+
+    const { birthtimeMs } = stats;
+
+    const metadata = await parseFile(`public/uploads/songs/${filename}`);
+
+    const { title, artist, artists, picture } = metadata.common;
+    const { duration } = metadata.format;
+
+    const coverImage = selectCover(picture);
+    let imagePath: string | undefined;
+    let thumbnailPath: string | undefined;
+
+    if (coverImage) {
+      const filePath: string =
+        filename.substring(0, filename.lastIndexOf('.')) || filename;
+
+      const imageBuffer: Buffer = Buffer.from(coverImage.data);
+      const imageFormat: string = coverImage.format.split('/')[1];
+
+      imagePath = `public/uploads/images/${filePath}.${imageFormat}`;
+      thumbnailPath = `public/uploads/images/${filePath}_thumbnail.${imageFormat}`;
+
+      sharp(imageBuffer).toFile(imagePath);
+      sharp(imageBuffer).resize(32, 32).toFile(thumbnailPath);
+    }
+
+    const song: CreateSongDto = {
+      title,
+      artist,
+      artists,
+      duration,
+      imagePath,
+      thumbnailPath,
+      filename,
+      birthtimeMs,
+    };
+
+    const createdSong = new this.songModel(song);
     return createdSong.save();
   }
 

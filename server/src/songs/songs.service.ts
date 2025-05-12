@@ -47,7 +47,7 @@ export class SongsService {
     const metadata = await parseFile(`public/uploads/songs/${filename}`);
 
     const { title, artist, artists, picture } = metadata.common;
-    const { duration } = metadata.format;
+    const duration = Math.floor(metadata.format.duration || 0);
 
     const coverImage = selectCover(picture);
     let imagePath: string | undefined;
@@ -67,11 +67,23 @@ export class SongsService {
       sharp(imageBuffer).resize(32, 32).toFile(thumbnailPath);
     }
 
+    const secToMin = (totalSeconds: number): string => {
+      const minutes: number = Math.floor(totalSeconds / 60);
+      const seconds: number = totalSeconds % 60;
+      const secondsStr: string =
+        seconds < 10 ? `0${seconds}` : seconds.toString();
+
+      return `${minutes}:${secondsStr}`;
+    };
+
+    const durationFormatted = secToMin(duration);
+
     const song: CreateSongDto = {
       title,
       artist,
       artists,
       duration,
+      durationFormatted,
       imagePath,
       thumbnailPath,
       filename,

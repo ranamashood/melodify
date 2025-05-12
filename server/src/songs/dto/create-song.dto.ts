@@ -3,6 +3,7 @@ export class CreateSongDto {
   artist?: string;
   artists?: string[];
   duration?: number;
+  durationFormatted?: string;
   imagePath?: string;
   thumbnailPath?: string;
   filename: string;

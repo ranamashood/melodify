@@ -18,6 +18,9 @@ export class Song {
   duration: number;
 
   @Prop()
+  durationFormatted: string;
+
+  @Prop()
   imagePath: string;
 
   @Prop()

@@ -65,6 +65,9 @@ export class SongsService {
 
       sharp(imageBuffer).toFile(imagePath);
       sharp(imageBuffer).resize(32, 32).toFile(thumbnailPath);
+
+      imagePath = `${filePath}.${imageFormat}`;
+      thumbnailPath = `${filePath}_thumbnail.${imageFormat}`;
     }
 
     const secToMin = (totalSeconds: number): string => {

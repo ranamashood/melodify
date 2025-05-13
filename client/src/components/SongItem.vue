@@ -2,6 +2,7 @@
 import type { Song } from '@/types/Song.interface'
 import { Icon } from '@iconify/vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
+import { store } from '@/store'
 
 defineProps<{
   song: Song
@@ -12,10 +13,15 @@ const { play } = useAudioPlayer()
 const getThumbnailUrl = (thumbnailPath: string): string => {
   return `${import.meta.env.VITE_BASE_URL}/images/${encodeURIComponent(thumbnailPath)}`
 }
+
+const playSong = (song: Song) => {
+  store.currentSong = song
+  play(song._id)
+}
 </script>
 
 <template>
-  <tr class="song" @click="play(song._id)">
+  <tr class="song" @click="playSong(song)">
     <td class="song__cover">
       <img
         class="song__image"

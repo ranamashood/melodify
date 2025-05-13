@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { Song } from '@/types/Song.interface'
 import { Icon } from '@iconify/vue'
+import { useAudioPlayer } from '@/composables/audioPlayer'
 
-const props = defineProps<{
+defineProps<{
   song: Song
 }>()
+
+const { play } = useAudioPlayer()
 
 const getThumbnailUrl = (thumbnailPath: string): string => {
   return `${import.meta.env.VITE_BASE_URL}/images/${encodeURIComponent(thumbnailPath)}`
@@ -12,7 +15,7 @@ const getThumbnailUrl = (thumbnailPath: string): string => {
 </script>
 
 <template>
-  <tr class="song">
+  <tr class="song" @click="play(song._id)">
     <td class="song__cover">
       <img
         class="song__image"
@@ -36,6 +39,11 @@ const getThumbnailUrl = (thumbnailPath: string): string => {
 </template>
 
 <style scoped>
+.song:hover {
+  background-color: grey;
+  cursor: pointer;
+}
+
 .song__cover {
   padding: 10px 0;
 }

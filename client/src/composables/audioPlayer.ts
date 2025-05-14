@@ -20,6 +20,21 @@ export function useAudioPlayer() {
     audio.addEventListener('timeupdate', () => {
       store.currentTime = Math.floor(audio?.currentTime || 0)
     })
+    store.isPaused = false
+  }
+
+  const playPause = () => {
+    if (!audio) {
+      return
+    }
+
+    if (audio.paused) {
+      audio.play()
+      store.isPaused = false
+    } else {
+      audio.pause()
+      store.isPaused = true
+    }
   }
 
   const setCurrentTime = (currentTime: number) => {
@@ -35,21 +50,14 @@ export function useAudioPlayer() {
       return
     }
 
-    audio.volume = volume
-  }
-
-  const getVolume = (): number => {
-    if (!audio) {
-      return 100
-    }
-
-    return audio.volume
+    audio.volume = volume / 100
+    store.volume = volume
   }
 
   return {
     play,
+    playPause,
     setCurrentTime,
     setVolume,
-    getVolume,
   }
 }

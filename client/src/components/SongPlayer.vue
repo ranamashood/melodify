@@ -6,12 +6,13 @@ import { computed } from 'vue'
 import Slider from './Slider.vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
 
-const { setCurrentTime, setVolume, getVolume } = useAudioPlayer()
+const { playPause, setCurrentTime, setVolume } = useAudioPlayer()
 
 const song = computed(() => store.currentSong)
 const currentTime = computed(() => store.currentTime)
 const currentTimeFormatted = computed(() => secToMin(currentTime.value))
-const volume = computed(() => getVolume())
+const isPaused = computed(() => store.isPaused)
+const volume = computed(() => store.volume)
 
 const handleSeek = (e: Event) => {
   const input = e.currentTarget as HTMLInputElement
@@ -23,7 +24,7 @@ const handleSeek = (e: Event) => {
 
 const handleVolume = (e: Event) => {
   const input = e.currentTarget as HTMLInputElement
-  const volume = parseInt(input.value) / 100
+  const volume = parseInt(input.value)
 
   setVolume(volume)
 }
@@ -48,9 +49,14 @@ const handleVolume = (e: Event) => {
       <div class="song__filename" v-else>{{ song.filename }}</div>
     </div>
     <div class="player__center">
-      <div>{{ currentTimeFormatted }}</div>
-      <Slider :max="song.duration || 0" :value="currentTime" :width="500" @change="handleSeek" />
-      <div>{{ song.durationFormatted }}</div>
+      <div class="player__controls">
+        <button @click="playPause()">{{ isPaused ? 'Play' : 'Pause' }}</button>
+      </div>
+      <div class="player__seekbar">
+        <div>{{ currentTimeFormatted }}</div>
+        <Slider :max="song.duration || 0" :value="currentTime" :width="500" @change="handleSeek" />
+        <div>{{ song.durationFormatted }}</div>
+      </div>
     </div>
     <div class="player__right">
       <Slider :max="100" :value="volume" :width="100" @change="handleVolume" />
@@ -78,11 +84,18 @@ const handleVolume = (e: Event) => {
 
 .player__center {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.player__seekbar {
+  display: flex;
+  gap: 10px;
 }
 
 .song:hover {

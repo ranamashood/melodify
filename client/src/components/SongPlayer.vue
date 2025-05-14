@@ -50,7 +50,10 @@ const handleVolume = (e: Event) => {
     </div>
     <div class="player__center">
       <div class="player__controls">
-        <button @click="playPause()">{{ isPaused ? 'Play' : 'Pause' }}</button>
+        <button class="player__control" @click="playPause()">
+          <Icon v-if="isPaused" icon="heroicons:play-circle-20-solid" />
+          <Icon v-else icon="heroicons:pause-circle-20-solid" />
+        </button>
       </div>
       <div class="player__seekbar">
         <div>{{ currentTimeFormatted }}</div>
@@ -91,6 +94,15 @@ const handleVolume = (e: Event) => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.player__control {
+  display: flex;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
 .player__seekbar {

@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { useFetch } from '@vueuse/core'
-import type { Song } from '@/types/Song.interface'
-import SongItem from './SongItem.vue'
 import { store } from '@/store'
-import { computed, watch } from 'vue'
+import SongItem from './SongItem.vue'
+import { computed } from 'vue'
+import { fetchSongs } from '@/helpers'
 
-const {
-  isFetching,
-  error,
-  data: songs,
-} = useFetch(`${import.meta.env.VITE_BASE_URL}/songs`)
-  .get()
-  .json<Song[]>()
+fetchSongs('songs')
 
-watch(songs, (newSongs) => {
-  store.songs = newSongs
-})
+const songs = computed(() => store.songs)
 </script>
 
 <template>

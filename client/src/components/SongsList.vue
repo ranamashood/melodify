@@ -41,4 +41,8 @@ table {
 th {
   text-align: left;
 }
+
+.song__duration {
+  text-align: center;
+}
 </style>

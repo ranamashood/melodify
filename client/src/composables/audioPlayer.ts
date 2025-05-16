@@ -1,4 +1,5 @@
 import { store } from '@/store'
+import type { Song } from '@/types/Song.interface'
 
 let audio: HTMLAudioElement | null = null
 
@@ -7,20 +8,21 @@ export function useAudioPlayer() {
     return `${import.meta.env.VITE_BASE_URL}/songs/${songId}/stream`
   }
 
-  const play = (songId: string) => {
+  const play = (song: Song) => {
     if (audio) {
       audio.pause()
       audio.src = ''
       audio = null
     }
 
-    const songUrl = getSongUrl(songId)
+    const songUrl = getSongUrl(song._id)
     audio = new Audio(songUrl)
     audio.play()
     audio.addEventListener('timeupdate', () => {
       store.currentTime = Math.floor(audio?.currentTime || 0)
     })
     store.isPaused = false
+    store.currentSong = song
   }
 
   const playPause = () => {

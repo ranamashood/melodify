@@ -6,7 +6,7 @@ import { computed } from 'vue'
 import Slider from './Slider.vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
 
-const { playPause, setCurrentTime, setVolume } = useAudioPlayer()
+const { play, playPause, setCurrentTime, setVolume } = useAudioPlayer()
 
 const song = computed(() => store.currentSong)
 const currentTime = computed(() => store.currentTime)
@@ -27,6 +27,30 @@ const handleVolume = (e: Event) => {
   const volume = parseInt(input.value)
 
   setVolume(volume)
+}
+
+const playPrevious = (songId: string) => {
+  if (!store.songs) {
+    return
+  }
+
+  const songs = store.songs
+  const currentIndex = songs.findIndex((song) => song._id === songId)
+  const previousSong = songs[currentIndex - 1]
+
+  play(previousSong)
+}
+
+const playNext = (songId: string) => {
+  if (!store.songs) {
+    return
+  }
+
+  const songs = store.songs
+  const currentIndex = songs.findIndex((song) => song._id === songId)
+  const nextSong = songs[currentIndex + 1]
+
+  play(nextSong)
 }
 </script>
 
@@ -50,9 +74,15 @@ const handleVolume = (e: Event) => {
     </div>
     <div class="player__center">
       <div class="player__controls">
-        <button class="player__control" @click="playPause()">
+        <button class="player__control" @click="playPrevious(song._id)">
+          <Icon icon="heroicons:backward-20-solid" />
+        </button>
+        <button class="player__control player__pause" @click="playPause()">
           <Icon v-if="isPaused" icon="heroicons:play-circle-20-solid" />
           <Icon v-else icon="heroicons:pause-circle-20-solid" />
+        </button>
+        <button class="player__control" @click="playNext(song._id)">
+          <Icon icon="heroicons:forward-20-solid" />
         </button>
       </div>
       <div class="player__seekbar">
@@ -89,11 +119,17 @@ const handleVolume = (e: Event) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .player__control {
@@ -101,8 +137,12 @@ const handleVolume = (e: Event) => {
   border: none;
   outline: none;
   background-color: transparent;
-  font-size: 2rem;
+  font-size: 1.2rem;
   cursor: pointer;
+}
+
+.player__pause {
+  font-size: 2rem;
 }
 
 .player__seekbar {

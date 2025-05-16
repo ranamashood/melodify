@@ -2,6 +2,8 @@
 import { useFetch } from '@vueuse/core'
 import type { Song } from '@/types/Song.interface'
 import SongItem from './SongItem.vue'
+import { store } from '@/store'
+import { computed, watch } from 'vue'
 
 const {
   isFetching,
@@ -10,6 +12,10 @@ const {
 } = useFetch(`${import.meta.env.VITE_BASE_URL}/songs`)
   .get()
   .json<Song[]>()
+
+watch(songs, (newSongs) => {
+  store.songs = newSongs
+})
 </script>
 
 <template>

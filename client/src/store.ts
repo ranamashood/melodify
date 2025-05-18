@@ -7,10 +7,12 @@ export const store = reactive<{
   currentTime: number
   isPaused: boolean
   volume: number
+  contextMenuVisible: boolean
 }>({
   songs: [],
   currentSong: {} as Song,
   currentTime: 0,
   isPaused: true,
   volume: 100,
+  contextMenuVisible: false,
 })

@@ -30,3 +30,12 @@ export const fetchSongs = (url: string) => {
 
   return { isFetching, error, songs }
 }
+
+export const showContextMenu = (e: Event) => {
+  e.preventDefault()
+  store.contextMenuVisible = true
+
+  document.addEventListener('click', () => {
+    store.contextMenuVisible = false
+  })
+}

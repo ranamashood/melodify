@@ -5,7 +5,7 @@ import { fetchSongs } from '@/helpers'
 <template>
   <div class="sidebar">
     <button class="sidebar__button" @click="fetchSongs('songs')">All Songs</button>
-    <button class="sidebar__button">Liked Songs</button>
+    <button class="sidebar__button" @click="fetchSongs('likes')">Liked Songs</button>
   </div>
 </template>
 

@@ -1,26 +1,39 @@
 <script setup lang="ts">
 import { store } from '@/store'
-import { useMouse } from '@vueuse/core'
-import { computed, watch } from 'vue'
+import { useFetch, useMouse } from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
 
-const contextMenuVisible = computed(() => store.contextMenuVisible)
+const contextedSongId = computed(() => store.contextedSongId)
 
 const { x, y } = useMouse()
 
 let mouseX = 0
 let mouseY = 0
+const isLiked = ref(false)
 
-watch(contextMenuVisible, (isContextMenuVisible) => {
-  if (isContextMenuVisible) {
+watch(contextedSongId, async (newContextedSongId) => {
+  if (newContextedSongId) {
     mouseX = x.value
     mouseY = y.value
+
+    const { data } = await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${newContextedSongId}`)
+      .get()
+      .json()
+
+    isLiked.value = !!data.value
   }
 })
+
+const toggleLike = async (songId: string) => {
+  await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${songId}`).post()
+}
 </script>
 
 <template>
-  <div class="menu" v-if="contextMenuVisible" :style="{ left: `${mouseX}px`, top: `${mouseY}px` }">
-    <button class="menu__item">Add to liked songs</button>
+  <div class="menu" v-if="contextedSongId" :style="{ left: `${mouseX}px`, top: `${mouseY}px` }">
+    <button class="menu__item" @click="toggleLike(store.contextedSongId)">
+      {{ isLiked ? 'Remove from liked songs' : 'Add to liked songs' }}
+    </button>
   </div>
 </template>
 
@@ -37,5 +50,6 @@ watch(contextMenuVisible, (isContextMenuVisible) => {
   outline: none;
   padding: 10px 20px;
   border-radius: 12px;
+  cursor: pointer;
 }
 </style>

@@ -31,11 +31,11 @@ export const fetchSongs = (url: string) => {
   return { isFetching, error, songs }
 }
 
-export const showContextMenu = (e: Event) => {
+export const showContextMenu = (e: Event, songId: string) => {
   e.preventDefault()
-  store.contextMenuVisible = true
+  store.contextedSongId = songId
 
   document.addEventListener('click', () => {
-    store.contextMenuVisible = false
+    store.contextedSongId = ''
   })
 }

@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { LikesModule } from './likes/likes.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       serveRoot: '/images',
     }),
     SongsModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

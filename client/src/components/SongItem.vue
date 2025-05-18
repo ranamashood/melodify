@@ -2,7 +2,7 @@
 import type { Song } from '@/types/Song.interface'
 import { Icon } from '@iconify/vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
-import { getImageUrl } from '@/helpers'
+import { getImageUrl, showContextMenu } from '@/helpers'
 
 defineProps<{
   song: Song
@@ -12,7 +12,7 @@ const { play } = useAudioPlayer()
 </script>
 
 <template>
-  <tr class="song" @click="play(song)">
+  <tr class="song" @click="play(song)" @contextmenu="showContextMenu($event, song._id)">
     <td class="song__cover">
       <img class="song__image" v-if="song.thumbnailPath" :src="getImageUrl(song.thumbnailPath)" />
       <Icon class="song__icon" v-else icon="heroicons:musical-note-16-solid" />

@@ -15,7 +15,12 @@ export class SongsService {
   constructor(@InjectModel(Song.name) private songModel: Model<Song>) {}
 
   async scanMusicDirectory() {
-    const songFilenames = await readdir('public/uploads/songs/');
+    const dirents = await readdir('/home/mashood/Music/', {
+      withFileTypes: true,
+    });
+    const songFilenames = dirents
+      .filter((dirent) => dirent.isFile())
+      .map((dirent) => dirent.name);
 
     const dirSongsSet = new Set(songFilenames);
     const dbSongs = await this.findAll();
@@ -40,11 +45,11 @@ export class SongsService {
   }
 
   async create(filename: string) {
-    const stats = await stat(`public/uploads/songs/${filename}`);
+    const stats = await stat(`/home/mashood/Music/${filename}`);
 
     const { ctimeMs } = stats;
 
-    const metadata = await parseFile(`public/uploads/songs/${filename}`);
+    const metadata = await parseFile(`/home/mashood/Music/${filename}`);
 
     const { title, artist, artists, picture } = metadata.common;
     const duration = Math.floor(metadata.format.duration || 0);
@@ -112,7 +117,7 @@ export class SongsService {
       throw new NotFoundException('Song not found');
     }
 
-    const filePath = `public/uploads/songs/${song.filename}`;
+    const filePath = `/home/mashood/Music/${song.filename}`;
     const stats = await stat(filePath);
     const size = stats.size;
 

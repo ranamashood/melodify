@@ -7,5 +7,5 @@ export class CreateSongDto {
   imagePath?: string;
   thumbnailPath?: string;
   filename: string;
-  birthtimeMs: number;
+  ctimeMs: number;
 }

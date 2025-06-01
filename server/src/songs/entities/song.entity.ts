@@ -30,7 +30,7 @@ export class Song {
   filename: string;
 
   @Prop({ required: true })
-  birthtimeMs: number;
+  ctimeMs: number;
 }
 
 export const SongSchema = SchemaFactory.createForClass(Song);

@@ -47,7 +47,7 @@ export class SongsService {
   async create(filename: string) {
     const stats = await stat(`/home/mashood/Music/${filename}`);
 
-    const { ctimeMs } = stats;
+    const { mtimeMs } = stats;
 
     const metadata = await parseFile(`/home/mashood/Music/${filename}`);
 
@@ -95,7 +95,7 @@ export class SongsService {
       imagePath,
       thumbnailPath,
       filename,
-      ctimeMs,
+      mtimeMs,
     };
 
     const createdSong = new this.songModel(song);
@@ -103,7 +103,7 @@ export class SongsService {
   }
 
   findAll() {
-    return this.songModel.find().sort({ ctimeMs: -1 }).exec();
+    return this.songModel.find().sort({ mtimeMs: -1 }).exec();
   }
 
   findOne(id: string) {

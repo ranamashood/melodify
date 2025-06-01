@@ -27,12 +27,23 @@ watch(contextedSongId, async (newContextedSongId) => {
 const toggleLike = async (songId: string) => {
   await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${songId}`).post()
 }
+
+const addToPlaylist = (playlistId: string, songId: string) => {
+  useFetch(`${import.meta.env.VITE_BASE_URL}/playlist-songs`).post({ playlistId, songId })
+}
 </script>
 
 <template>
   <div class="menu" v-if="contextedSongId" :style="{ left: `${mouseX}px`, top: `${mouseY}px` }">
     <button class="menu__item" @click="toggleLike(store.contextedSongId)">
       {{ isLiked ? 'Remove from liked songs' : 'Add to liked songs' }}
+    </button>
+    <button
+      v-for="playlist in store.playlists"
+      class="menu__item"
+      @click="addToPlaylist(playlist._id, store.contextedSongId)"
+    >
+      {{ playlist.name }}
     </button>
   </div>
 </template>
@@ -41,6 +52,7 @@ const toggleLike = async (songId: string) => {
 .menu {
   position: absolute;
   display: flex;
+  flex-direction: column;
   border: 1px solid black;
   border-radius: 12px;
 }
@@ -50,6 +62,7 @@ const toggleLike = async (songId: string) => {
   outline: none;
   padding: 10px 20px;
   border-radius: 12px;
+  text-align: left;
   cursor: pointer;
 }
 </style>

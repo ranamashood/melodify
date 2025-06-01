@@ -1,26 +1,10 @@
 <script setup lang="ts">
-import Sidebar from '@/components/Sidebar.vue'
-import SeekBar from '@/components/SongPlayer.vue'
-import SongsList from '@/components/SongsList.vue'
+import SongsView from './SongsView.vue'
+import { fetchSongs } from '@/helpers'
+
+fetchSongs('songs')
 </script>
 
 <template>
-  <div class="layout">
-    <aside>
-      <Sidebar />
-    </aside>
-    <main>
-      <SongsList />
-    </main>
-    <SeekBar />
-  </div>
+  <SongsView />
 </template>
-
-<style scoped>
-.layout {
-  display: flex;
-}
-main {
-  flex: 1;
-}
-</style>

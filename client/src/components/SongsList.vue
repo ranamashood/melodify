@@ -2,10 +2,7 @@
 import { store } from '@/store'
 import SongItem from './SongItem.vue'
 import { computed } from 'vue'
-import { fetchSongs } from '@/helpers'
 import ContextMenu from './ContextMenu.vue'
-
-fetchSongs('songs')
 
 const songs = computed(() => store.songs)
 </script>

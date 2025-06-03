@@ -29,6 +29,7 @@ table {
 }
 
 th {
+  padding: 0 10px;
   text-align: left;
 }
 

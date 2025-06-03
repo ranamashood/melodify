@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { fetchSongs } from '@/helpers'
 import { useFetch } from '@vueuse/core'
 import { type Playlist } from '@/types/Playlist.interface'
 import { useRouter } from 'vue-router'
@@ -28,6 +27,14 @@ const createPlaylist = async () => {
   fetchPlaylists()
 }
 
+const goToHome = () => {
+  router.push({ name: 'home' })
+}
+
+const goToLikedSongs = () => {
+  router.push({ name: 'likedSongs' })
+}
+
 const goToPlaylist = (id: string) => {
   router.push({ name: 'playlist', params: { id } })
 }
@@ -36,8 +43,8 @@ const goToPlaylist = (id: string) => {
 <template>
   <div class="sidebar">
     <button class="sidebar__button" @click="createPlaylist()">Create new playlist</button>
-    <button class="sidebar__button" @click="fetchSongs('songs')">All Songs</button>
-    <button class="sidebar__button" @click="fetchSongs('likes')">Liked Songs</button>
+    <button class="sidebar__button" @click="goToHome()">All Songs</button>
+    <button class="sidebar__button" @click="goToLikedSongs()">Liked Songs</button>
     <button
       v-for="playlist in playlists"
       class="sidebar__button"

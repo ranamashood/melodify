@@ -11,6 +11,12 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      name: 'likedSongs',
+      path: '/liked-songs',
+      component: HomeView,
+      props: { isLikedSongs: true },
+    },
+    {
       path: '/playlist/:id',
       name: 'playlist',
       component: PlaylistView,

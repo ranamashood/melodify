@@ -23,8 +23,10 @@ watch(playlists, (newPlaylists) => {
 const createPlaylist = async () => {
   const name = prompt('Enter playlist name:')
 
-  await useFetch(`${import.meta.env.VITE_BASE_URL}/playlists`).post({ name })
-  fetchPlaylists()
+  if (name) {
+    await useFetch(`${import.meta.env.VITE_BASE_URL}/playlists`).post({ name })
+    fetchPlaylists()
+  }
 }
 
 const goToHome = () => {

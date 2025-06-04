@@ -16,8 +16,8 @@ export class PlaylistSongsController {
   constructor(private readonly playlistSongsService: PlaylistSongsService) {}
 
   @Post()
-  create(@Body() createPlaylistSongDto: CreatePlaylistSongDto) {
-    return this.playlistSongsService.create(createPlaylistSongDto);
+  toggleSong(@Body() createPlaylistSongDto: CreatePlaylistSongDto) {
+    return this.playlistSongsService.toggleSong(createPlaylistSongDto);
   }
 
   @Get()
@@ -28,6 +28,11 @@ export class PlaylistSongsController {
   @Get(':playlistId')
   findOne(@Param('playlistId') playlistId: string) {
     return this.playlistSongsService.findOne(playlistId);
+  }
+
+  @Get('song-exists/:songId')
+  songExistsInPlaylists(@Param('songId') songId: string) {
+    return this.playlistSongsService.songExistsInPlaylists(songId);
   }
 
   @Patch(':id')

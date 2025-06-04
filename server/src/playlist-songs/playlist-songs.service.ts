@@ -4,19 +4,29 @@ import { UpdatePlaylistSongDto } from './dto/update-playlist-song.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { PlaylistSong } from './entities/playlist-song.entity';
 import { Model } from 'mongoose';
+import { Playlist } from 'src/playlists/entities/playlist.entity';
 
 @Injectable()
 export class PlaylistSongsService {
   constructor(
     @InjectModel(PlaylistSong.name)
     private playlistSongModel: Model<PlaylistSong>,
+    @InjectModel(Playlist.name)
+    private playlistModel: Model<Playlist>,
   ) {}
 
-  create(createPlaylistSongDto: CreatePlaylistSongDto) {
-    const createdPlaylistSong = new this.playlistSongModel(
+  async toggleSong(createPlaylistSongDto: CreatePlaylistSongDto) {
+    const isSongExists = await this.playlistSongModel.findOne(
       createPlaylistSongDto,
     );
-    return createdPlaylistSong.save();
+
+    if (isSongExists) {
+      await this.playlistSongModel.deleteOne(createPlaylistSongDto);
+    } else {
+      await this.playlistSongModel.create(createPlaylistSongDto);
+    }
+
+    return { isSongExists: !isSongExists };
   }
 
   findAll() {
@@ -31,6 +41,21 @@ export class PlaylistSongsService {
     const songs = playlistSongs.map((playlistSong) => playlistSong.songId);
 
     return songs;
+  }
+
+  async songExistsInPlaylists(songId: string) {
+    const playlistSongs = await this.playlistSongModel.find({ songId }).exec();
+    const playlists = await this.playlistModel.find().exec();
+
+    const playlistSongIds = new Set(
+      playlistSongs.map((playlistSong) => playlistSong.playlistId.toString()),
+    );
+
+    const existsInPlaylists = playlists.map((playlist) =>
+      playlistSongIds.has(playlist.id),
+    );
+
+    return existsInPlaylists;
   }
 
   update(id: number, updatePlaylistSongDto: UpdatePlaylistSongDto) {

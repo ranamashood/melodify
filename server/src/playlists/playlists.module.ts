@@ -12,5 +12,6 @@ import { Playlist, PlaylistSchema } from './entities/playlist.entity';
   ],
   controllers: [PlaylistsController],
   providers: [PlaylistsService],
+  exports: [MongooseModule],
 })
 export class PlaylistsModule {}

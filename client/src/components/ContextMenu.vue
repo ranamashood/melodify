@@ -10,17 +10,27 @@ const { x, y } = useMouse()
 let mouseX = 0
 let mouseY = 0
 const isLiked = ref(false)
+const songExistsInPlaylists = ref<boolean[]>([])
 
 watch(contextedSongId, async (newContextedSongId) => {
   if (newContextedSongId) {
     mouseX = x.value
     mouseY = y.value
 
-    const { data } = await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${newContextedSongId}`)
+    const { data: likesData } = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/likes/${newContextedSongId}`,
+    )
       .get()
       .json()
 
-    isLiked.value = !!data.value
+    const { data: playlistSongsData } = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/playlist-songs/song-exists/${newContextedSongId}`,
+    )
+      .get()
+      .json()
+
+    isLiked.value = !!likesData.value
+    songExistsInPlaylists.value = playlistSongsData.value
   }
 })
 
@@ -39,10 +49,11 @@ const addToPlaylist = (playlistId: string, songId: string) => {
       {{ isLiked ? 'Remove from liked songs' : 'Add to liked songs' }}
     </button>
     <button
-      v-for="playlist in store.playlists"
+      v-for="(playlist, index) in store.playlists"
       class="menu__item"
       @click="addToPlaylist(playlist._id, store.contextedSongId)"
     >
+      {{ songExistsInPlaylists[index] ? 'Remove from' : 'Add to' }}
       {{ playlist.name }}
     </button>
   </div>

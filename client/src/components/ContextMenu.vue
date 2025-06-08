@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { store } from '@/store'
-import { useFetch, useMouse } from '@vueuse/core'
+import { useFetch } from '@/helpers'
+import { useMouse } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
 const contextedSongId = computed(() => store.contextedSongId)

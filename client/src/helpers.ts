@@ -1,7 +1,33 @@
-import { useFetch } from '@vueuse/core'
+import { createFetch } from '@vueuse/core'
 import type { Song } from './types/Song.interface'
 import { watch } from 'vue'
 import { store } from './store'
+
+export const useFetch = createFetch({
+  baseUrl: import.meta.env.VITE_BASE_URL,
+  options: {
+    async beforeFetch({ options }: { options: any }) {
+      const token = localStorage.getItem('token')
+      if (token) {
+        options.headers.Authorization = `Bearer ${token}`
+      }
+
+      return { options }
+    },
+
+    async onFetchError({ response, error }) {
+      if (response?.status === 401) {
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
+
+      return { response, error }
+    },
+  },
+  fetchOptions: {
+    mode: 'cors',
+  },
+})
 
 export const getImageUrl = (imagePath: string): string => {
   return `${import.meta.env.VITE_BASE_URL}/images/${encodeURIComponent(imagePath)}`
@@ -38,4 +64,8 @@ export const showContextMenu = (e: Event, songId: string) => {
   document.addEventListener('click', () => {
     store.contextedSongId = ''
   })
+}
+
+export const logout = () => {
+  localStorage.removeItem('token')
 }

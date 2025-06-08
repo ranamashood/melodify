@@ -14,6 +14,7 @@ import {
 import { SongsService } from './songs.service';
 import { UpdateSongDto } from './dto/update-song.dto';
 import { Request, Response } from 'express';
+import { Public } from 'src/utils/constants';
 
 @Controller('songs')
 export class SongsController {
@@ -35,6 +36,7 @@ export class SongsController {
     return this.songsService.findOne(id);
   }
 
+  @Public()
   @Get(':id/stream')
   streamSong(
     @Param('id') id: string,

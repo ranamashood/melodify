@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFetch } from '@vueuse/core'
+import { useFetch } from '@/helpers'
 import { type Playlist } from '@/types/Playlist.interface'
 import { useRouter } from 'vue-router'
 import { watch } from 'vue'

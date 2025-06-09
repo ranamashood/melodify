@@ -10,13 +10,18 @@ import {
 import { PlaylistSongsService } from './playlist-songs.service';
 import { CreatePlaylistSongDto } from './dto/create-playlist-song.dto';
 import { UpdatePlaylistSongDto } from './dto/update-playlist-song.dto';
+import { User } from 'src/users/user.decorator';
 
 @Controller('playlist-songs')
 export class PlaylistSongsController {
   constructor(private readonly playlistSongsService: PlaylistSongsService) {}
 
   @Post()
-  toggleSong(@Body() createPlaylistSongDto: CreatePlaylistSongDto) {
+  toggleSong(
+    @User('userId') userId: string,
+    @Body() createPlaylistSongDto: CreatePlaylistSongDto,
+  ) {
+    createPlaylistSongDto.userId = userId;
     return this.playlistSongsService.toggleSong(createPlaylistSongDto);
   }
 
@@ -26,8 +31,11 @@ export class PlaylistSongsController {
   }
 
   @Get(':playlistId')
-  findOne(@Param('playlistId') playlistId: string) {
-    return this.playlistSongsService.findOne(playlistId);
+  findOne(
+    @User('userId') userId: string,
+    @Param('playlistId') playlistId: string,
+  ) {
+    return this.playlistSongsService.findOne(userId, playlistId);
   }
 
   @Get('song-exists/:songId')

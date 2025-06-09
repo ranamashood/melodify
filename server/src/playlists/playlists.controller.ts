@@ -10,24 +10,29 @@ import {
 import { PlaylistsService } from './playlists.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { User } from 'src/users/user.decorator';
 
 @Controller('playlists')
 export class PlaylistsController {
   constructor(private readonly playlistsService: PlaylistsService) {}
 
   @Post()
-  create(@Body() createPlaylistDto: CreatePlaylistDto) {
+  create(
+    @User('userId') userId: string,
+    @Body() createPlaylistDto: CreatePlaylistDto,
+  ) {
+    createPlaylistDto.userId = userId;
     return this.playlistsService.create(createPlaylistDto);
   }
 
   @Get()
-  findAll() {
-    return this.playlistsService.findAll();
+  findAll(@User('userId') userId: string) {
+    return this.playlistsService.findAll(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.playlistsService.findOne(id);
+  findOne(@User('userId') userId: string, @Param('id') id: string) {
+    return this.playlistsService.findOne(userId, id);
   }
 
   @Patch(':id')

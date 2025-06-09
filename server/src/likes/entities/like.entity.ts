@@ -5,6 +5,13 @@ export type LikeDocument = HydratedDocument<Like>;
 
 @Schema()
 export class Like {
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  userId: string;
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Song', required: true })
   songId: Types.ObjectId;
 }

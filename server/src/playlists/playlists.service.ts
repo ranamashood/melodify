@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,15 +13,16 @@ export class PlaylistsService {
 
   create(createPlaylistDto: CreatePlaylistDto) {
     const createdPlaylist = new this.playlistModel(createPlaylistDto);
+
     return createdPlaylist.save();
   }
 
-  findAll() {
-    return this.playlistModel.find().exec();
+  findAll(userId: string) {
+    return this.playlistModel.find({ userId }).exec();
   }
 
-  findOne(id: string) {
-    return this.playlistModel.findById(id).exec();
+  findOne(userId: string, id: string) {
+    return this.playlistModel.findOne({ userId, id }).exec();
   }
 
   update(id: number, updatePlaylistDto: UpdatePlaylistDto) {

@@ -7,26 +7,29 @@ import { Model } from 'mongoose';
 export class LikesService {
   constructor(@InjectModel(Like.name) private likeModel: Model<Like>) {}
 
-  async toggleLike(songId: string) {
-    const isLiked = await this.likeModel.findOne({ songId });
+  async toggleLike(userId: string, songId: string) {
+    const isLiked = await this.likeModel.findOne({ userId, songId });
 
     if (isLiked) {
-      await this.likeModel.deleteOne({ songId });
+      await this.likeModel.deleteOne({ userId, songId });
     } else {
-      await this.likeModel.create({ songId });
+      await this.likeModel.create({ userId, songId });
     }
 
     return { isLiked: !isLiked };
   }
 
-  async findAll() {
-    const likes = await this.likeModel.find().populate('songId').exec();
+  async findAll(userId: string) {
+    const likes = await this.likeModel
+      .find({ userId })
+      .populate('songId')
+      .exec();
     const songs = likes.map((song) => song.songId);
 
     return songs;
   }
 
-  findOne(songId: string) {
-    return this.likeModel.findOne({ songId }).exec();
+  findOne(userId: string, songId: string) {
+    return this.likeModel.findOne({ userId, songId }).exec();
   }
 }

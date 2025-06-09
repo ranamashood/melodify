@@ -16,6 +16,7 @@ export class PlaylistSongsService {
   ) {}
 
   async toggleSong(createPlaylistSongDto: CreatePlaylistSongDto) {
+    console.log(createPlaylistSongDto);
     const isSongExists = await this.playlistSongModel.findOne(
       createPlaylistSongDto,
     );
@@ -33,9 +34,9 @@ export class PlaylistSongsService {
     return `This action returns all playlistSongs`;
   }
 
-  async findOne(playlistId: string) {
+  async findOne(userId: string, playlistId: string) {
     const playlistSongs = await this.playlistSongModel
-      .find({ playlistId })
+      .find({ userId, playlistId })
       .populate('songId')
       .exec();
     const songs = playlistSongs.map((playlistSong) => playlistSong.songId);

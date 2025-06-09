@@ -3,7 +3,7 @@ import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
 
 export type PlaylistDocument = HydratedDocument<Playlist>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Playlist {
   @Prop({
     type: MongooseSchema.Types.ObjectId,

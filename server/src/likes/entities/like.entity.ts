@@ -3,7 +3,7 @@ import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
 
 export type LikeDocument = HydratedDocument<Like>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Like {
   @Prop({
     type: MongooseSchema.Types.ObjectId,

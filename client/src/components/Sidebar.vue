@@ -4,6 +4,7 @@ import { type Playlist } from '@/types/Playlist.interface'
 import { useRouter } from 'vue-router'
 import { watch } from 'vue'
 import { store } from '@/store'
+import { socket } from '@/socketio.service'
 
 const router = useRouter()
 
@@ -40,10 +41,22 @@ const goToLikedSongs = () => {
 const goToPlaylist = (id: string) => {
   router.push({ name: 'playlist', params: { id } })
 }
+
+const joinRoom = () => {
+  socket.connect()
+  store.isInRoom = true
+}
+
+const leaveRoom = () => {
+  socket.disconnect()
+  store.isInRoom = false
+}
 </script>
 
 <template>
   <div class="sidebar">
+    <button v-if="!store.isInRoom" class="sidebar__button" @click="joinRoom()">Join Room</button>
+    <button v-else class="sidebar__button" @click="leaveRoom()">Leave Room</button>
     <button class="sidebar__button" @click="createPlaylist()">Create new playlist</button>
     <button class="sidebar__button" @click="goToHome()">All Songs</button>
     <button class="sidebar__button" @click="goToLikedSongs()">Liked Songs</button>

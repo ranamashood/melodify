@@ -1,14 +1,55 @@
+import { socket } from '@/socketio.service'
 import { store } from '@/store'
 import type { Song } from '@/types/Song.interface'
+import { watch } from 'vue'
 
 let audio: HTMLAudioElement | null = null
 
 export function useAudioPlayer() {
+  socket.on('play', (songId?: string) => {
+    if (!songId) {
+      store.isPaused = false
+      return
+    }
+
+    const song = store.songs?.find((song) => song._id === songId)
+
+    if (song) {
+      store.currentSong = song
+    }
+  })
+
+  socket.on('pause', () => {
+    store.isPaused = true
+  })
+
+  socket.on('seek', (time: number) => {
+    if (audio) {
+      audio.currentTime = time
+    }
+
+    store.currentTime = time
+  })
+
+  watch(
+    () => store.isPaused,
+    (isPaused) => {
+      isPaused ? audio?.pause() : audio?.play()
+    },
+  )
+
+  watch(
+    () => store.currentSong,
+    (currentSong) => {
+      play(currentSong)
+    },
+  )
+
   const getSongUrl = (songId: string) => {
     return `${import.meta.env.VITE_BASE_URL}/songs/${songId}/stream`
   }
 
-  const play = (song: Song) => {
+  const play = (song: Song, emit = false) => {
     if (audio) {
       audio.pause()
       audio.src = ''
@@ -23,20 +64,42 @@ export function useAudioPlayer() {
     })
     store.isPaused = false
     store.currentSong = song
+
+    if (emit && store.isInRoom) {
+      socket.emit('play', song._id)
+    }
   }
 
   const playPause = () => {
-    if (!audio) {
+    store.isPaused = !store.isPaused
+
+    if (store.isInRoom) {
+      store.isPaused ? socket.emit('pause') : socket.emit('play')
+    }
+  }
+
+  const playPrevious = (songId: string) => {
+    if (!store.songs) {
       return
     }
 
-    if (audio.paused) {
-      audio.play()
-      store.isPaused = false
-    } else {
-      audio.pause()
-      store.isPaused = true
+    const songs = store.songs
+    const currentIndex = songs.findIndex((song) => song._id === songId)
+    const previousSong = songs[currentIndex - 1]
+
+    play(previousSong, store.isInRoom)
+  }
+
+  const playNext = (songId: string) => {
+    if (!store.songs) {
+      return
     }
+
+    const songs = store.songs
+    const currentIndex = songs.findIndex((song) => song._id === songId)
+    const nextSong = songs[currentIndex + 1]
+
+    play(nextSong, store.isInRoom)
   }
 
   const setCurrentTime = (currentTime: number) => {
@@ -45,6 +108,11 @@ export function useAudioPlayer() {
     }
 
     audio.currentTime = currentTime
+    store.currentTime = currentTime
+
+    if (store.isInRoom) {
+      socket.emit('seek', currentTime)
+    }
   }
 
   const setVolume = (volume: number) => {
@@ -59,6 +127,8 @@ export function useAudioPlayer() {
   return {
     play,
     playPause,
+    playPrevious,
+    playNext,
     setCurrentTime,
     setVolume,
   }

@@ -10,6 +10,7 @@ export const store = reactive<{
   isPaused: boolean
   volume: number
   contextedSongId: string
+  isInRoom: boolean
 }>({
   playlists: [],
   songs: [],
@@ -18,4 +19,5 @@ export const store = reactive<{
   isPaused: true,
   volume: 100,
   contextedSongId: '',
+  isInRoom: false,
 })

@@ -6,7 +6,7 @@ import { computed } from 'vue'
 import Slider from './Slider.vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
 
-const { play, playPause, setCurrentTime, setVolume } = useAudioPlayer()
+const { playPrevious, playNext, playPause, setCurrentTime, setVolume } = useAudioPlayer()
 
 const song = computed(() => store.currentSong)
 const currentTime = computed(() => store.currentTime)
@@ -18,7 +18,6 @@ const handleSeek = (e: Event) => {
   const input = e.currentTarget as HTMLInputElement
   const currentTime = parseInt(input.value)
 
-  store.currentTime = currentTime
   setCurrentTime(currentTime)
 }
 
@@ -27,30 +26,6 @@ const handleVolume = (e: Event) => {
   const volume = parseInt(input.value)
 
   setVolume(volume)
-}
-
-const playPrevious = (songId: string) => {
-  if (!store.songs) {
-    return
-  }
-
-  const songs = store.songs
-  const currentIndex = songs.findIndex((song) => song._id === songId)
-  const previousSong = songs[currentIndex - 1]
-
-  play(previousSong)
-}
-
-const playNext = (songId: string) => {
-  if (!store.songs) {
-    return
-  }
-
-  const songs = store.songs
-  const currentIndex = songs.findIndex((song) => song._id === songId)
-  const nextSong = songs[currentIndex + 1]
-
-  play(nextSong)
 }
 </script>
 

@@ -16,7 +16,6 @@ export class PlaylistSongsService {
   ) {}
 
   async toggleSong(createPlaylistSongDto: CreatePlaylistSongDto) {
-    console.log(createPlaylistSongDto);
     const isSongExists = await this.playlistSongModel.findOne(
       createPlaylistSongDto,
     );

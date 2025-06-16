@@ -45,6 +45,7 @@ const goToPlaylist = (id: string) => {
 const joinRoom = () => {
   socket.connect()
   store.isInRoom = true
+  socket.emit('createClient', store.user.username)
 }
 
 const leaveRoom = () => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Sidebar from '@/components/Sidebar.vue'
+import LeftSidebar from '@/components/LeftSidebar.vue'
+import RightSidebar from '@/components/RightSidebar.vue'
 import SeekBar from '@/components/SongPlayer.vue'
 import SongsList from '@/components/SongsList.vue'
 </script>
@@ -7,11 +8,14 @@ import SongsList from '@/components/SongsList.vue'
 <template>
   <div class="layout">
     <aside>
-      <Sidebar />
+      <LeftSidebar />
     </aside>
     <main>
       <SongsList />
     </main>
+    <aside>
+      <RightSidebar />
+    </aside>
     <SeekBar />
   </div>
 </template>

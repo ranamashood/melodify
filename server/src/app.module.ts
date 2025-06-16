@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MusicModule } from './sockets/music/music.module';
+import { ClientsModule } from './sockets/clients/clients.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MusicModule } from './sockets/music/music.module';
     AuthModule,
     UsersModule,
     MusicModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

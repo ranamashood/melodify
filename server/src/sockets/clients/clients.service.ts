@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @Injectable()
 export class ClientsService {
   clients = new Map<string, string>();
 
-  create(username: string, client: Socket) {
+  create(username: string, client: Socket, server: Server) {
     this.clients.set(client.id, username);
-    this.findAll(client);
+    this.findAll(server);
   }
 
-  findAll(client: Socket) {
+  findAll(server: Server) {
     const clients = Array.from(this.clients.values());
-    client.emit('findAllClients', clients);
+    server.emit('findAllClients', clients);
   }
 
-  remove(id: string, client: Socket) {
+  remove(id: string, server: Server) {
     this.clients.delete(id);
-    this.findAll(client);
+    this.findAll(server);
   }
 }

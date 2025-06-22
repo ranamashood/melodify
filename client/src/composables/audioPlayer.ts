@@ -15,7 +15,7 @@ export function useAudioPlayer() {
     const song = store.songs?.find((song) => song._id === songId)
 
     if (song) {
-      store.currentSong = song
+      play(song)
     }
   })
 
@@ -35,13 +35,6 @@ export function useAudioPlayer() {
     () => store.isPaused,
     (isPaused) => {
       isPaused ? audio?.pause() : audio?.play()
-    },
-  )
-
-  watch(
-    () => store.currentSong,
-    (currentSong) => {
-      play(currentSong)
     },
   )
 

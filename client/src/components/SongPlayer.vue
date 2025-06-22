@@ -75,13 +75,22 @@ const handleVolume = (e: Event) => {
 <style scoped>
 .player {
   position: fixed;
-  width: 100vw;
-  bottom: 0;
+  width: 97vw;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  border-radius: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--secondary-300);
-  padding: 0 10px;
+  padding: 5px 30px;
+
+  /* From https://css.glass */
+  background: var(--secondary-300-alpha);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .player__left {
@@ -137,6 +146,7 @@ const handleVolume = (e: Event) => {
 .song__icon {
   width: 50px;
   height: 50px;
+  border-radius: 12px;
 }
 
 .song__artists {

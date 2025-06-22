@@ -49,6 +49,7 @@ td {
 .song__icon {
   width: 30px;
   height: 30px;
+  border-radius: 6px;
 }
 
 .song__artists {

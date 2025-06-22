@@ -37,7 +37,7 @@ td {
 }
 
 .song:hover {
-  background-color: grey;
+  background-color: var(--secondary-200);
   cursor: pointer;
 }
 
@@ -49,6 +49,11 @@ td {
 .song__icon {
   width: 30px;
   height: 30px;
+}
+
+.song__artists {
+  color: var(--text-700);
+  font-size: 0.9rem;
 }
 
 .song__details {

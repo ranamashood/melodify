@@ -65,16 +65,23 @@ const addToPlaylist = (playlistId: string, songId: string) => {
   position: absolute;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
+  border: 2px solid var(--primary-500);
+  background-color: var(--background-50);
   border-radius: 12px;
 }
 
 .menu__item {
+  color: inherit;
+  background-color: transparent;
   border: none;
   outline: none;
   padding: 10px 20px;
-  border-radius: 12px;
+  border-radius: 6px;
   text-align: left;
   cursor: pointer;
+}
+
+.menu__item:hover {
+  background-color: var(--primary-500);
 }
 </style>

@@ -50,14 +50,14 @@ const handleVolume = (e: Event) => {
     <div class="player__center">
       <div class="player__controls">
         <button class="player__control" @click="playPrevious(song._id)">
-          <Icon icon="heroicons:backward-20-solid" />
+          <Icon class="player__icon" icon="heroicons:backward-20-solid" />
         </button>
         <button class="player__control player__pause" @click="playPause()">
-          <Icon v-if="isPaused" icon="heroicons:play-circle-20-solid" />
-          <Icon v-else icon="heroicons:pause-circle-20-solid" />
+          <Icon v-if="isPaused" class="player__icon" icon="heroicons:play-circle-20-solid" />
+          <Icon v-else class="player__icon" icon="heroicons:pause-circle-20-solid" />
         </button>
         <button class="player__control" @click="playNext(song._id)">
-          <Icon icon="heroicons:forward-20-solid" />
+          <Icon class="player__icon" icon="heroicons:forward-20-solid" />
         </button>
       </div>
       <div class="player__seekbar">
@@ -80,7 +80,7 @@ const handleVolume = (e: Event) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: grey;
+  background-color: var(--secondary-300);
   padding: 0 10px;
 }
 
@@ -116,6 +116,10 @@ const handleVolume = (e: Event) => {
   cursor: pointer;
 }
 
+.player__icon {
+  color: var(--primary-950);
+}
+
 .player__pause {
   font-size: 2rem;
 }
@@ -123,11 +127,6 @@ const handleVolume = (e: Event) => {
 .player__seekbar {
   display: flex;
   gap: 10px;
-}
-
-.song:hover {
-  background-color: grey;
-  cursor: pointer;
 }
 
 .song__cover {
@@ -138,6 +137,11 @@ const handleVolume = (e: Event) => {
 .song__icon {
   width: 50px;
   height: 50px;
+}
+
+.song__artists {
+  color: var(--text-700);
+  font-size: 0.9rem;
 }
 
 .song__duration {

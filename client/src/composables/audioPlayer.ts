@@ -2,6 +2,10 @@ import { socket } from '@/socketio.service'
 import { store } from '@/store'
 import type { Song } from '@/types/Song.interface'
 import { watch } from 'vue'
+import { useMediaSession } from '@/composables/mediaSession'
+import { getImageUrl } from '@/helpers'
+
+const { setMediaMetadata } = useMediaSession()
 
 let audio: HTMLAudioElement | null = null
 
@@ -61,6 +65,8 @@ export function useAudioPlayer() {
     if (emit && store.isInRoom) {
       socket.emit('play', song._id)
     }
+
+    setMediaMetadata(song.artist!, song.title!, getImageUrl(song.imagePath!))
   }
 
   const playPause = () => {

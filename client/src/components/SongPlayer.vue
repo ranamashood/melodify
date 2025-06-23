@@ -61,9 +61,9 @@ const handleVolume = (e: Event) => {
         </button>
       </div>
       <div class="player__seekbar">
-        <div>{{ currentTimeFormatted }}</div>
-        <Slider :max="song.duration || 0" :value="currentTime" :width="500" @change="handleSeek" />
-        <div>{{ song.durationFormatted }}</div>
+        <div class="player__duration">{{ currentTimeFormatted }}</div>
+        <Slider :max="song.duration || 1" :value="currentTime" :width="500" @change="handleSeek" />
+        <div class="player__duration">{{ song.durationFormatted }}</div>
       </div>
     </div>
     <div class="player__right">
@@ -133,8 +133,13 @@ const handleVolume = (e: Event) => {
   font-size: 2rem;
 }
 
+.player__duration {
+  font-size: 0.8rem;
+}
+
 .player__seekbar {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 

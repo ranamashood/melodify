@@ -5,6 +5,7 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { Song } from 'src/songs/entities/song.entity';
 
 @WebSocketGateway({
   cors: {
@@ -13,8 +14,8 @@ import { Socket } from 'socket.io';
 })
 export class MusicGateway {
   @SubscribeMessage('play')
-  play(@MessageBody() songId: string, @ConnectedSocket() client: Socket) {
-    client.broadcast.emit('play', songId);
+  play(@MessageBody() song: Song, @ConnectedSocket() client: Socket) {
+    client.broadcast.emit('play', song);
   }
 
   @SubscribeMessage('pause')

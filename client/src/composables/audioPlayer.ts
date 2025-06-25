@@ -10,17 +10,13 @@ const { setMediaMetadata } = useMediaSession()
 let audio: HTMLAudioElement | null = null
 
 export function useAudioPlayer() {
-  socket.on('play', (songId?: string) => {
-    if (!songId) {
+  socket.on('play', (song?: Song) => {
+    if (!song) {
       store.isPaused = false
       return
     }
 
-    const song = store.songs?.find((song) => song._id === songId)
-
-    if (song) {
-      play(song)
-    }
+    play(song)
   })
 
   socket.on('pause', () => {
@@ -63,7 +59,7 @@ export function useAudioPlayer() {
     store.currentSong = song
 
     if (emit && store.isInRoom) {
-      socket.emit('play', song._id)
+      socket.emit('play', song)
     }
 
     setMediaMetadata(song.artist!, song.title!, getImageUrl(song.imagePath!))

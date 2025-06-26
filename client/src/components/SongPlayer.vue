@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getImageUrl, secToMin } from '@/helpers'
+import { getImageUrl, secToMin, showContextMenu } from '@/helpers'
 import { store } from '@/store'
 import { Icon } from '@iconify/vue'
 import { computed } from 'vue'
@@ -37,7 +37,9 @@ const handleVolume = (e: Event) => {
         <Icon class="song__icon" v-else icon="heroicons:musical-note-16-solid" />
       </div>
       <div v-if="song.title">
-        <div class="song__title">{{ song.title }}</div>
+        <div class="song__title" @contextmenu="showContextMenu($event, song._id, 'song')">
+          {{ song.title }}
+        </div>
         <div class="song__artists">
           <span v-if="song.artists" v-for="(artist, index) in song.artists">
             <span>{{ artist }}</span>
@@ -152,6 +154,11 @@ const handleVolume = (e: Event) => {
   width: 50px;
   height: 50px;
   border-radius: 12px;
+}
+
+.song__title:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .song__artists {

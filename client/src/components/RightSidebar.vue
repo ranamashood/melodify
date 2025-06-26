@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useAudioPlayer } from '@/composables/audioPlayer'
 import { getImageUrl, showContextMenu } from '@/helpers'
 import { socket } from '@/socketio.service'
 import { store } from '@/store'
 import type { Song } from '@/types/Song.interface'
 import { Icon } from '@iconify/vue'
 import { ref } from 'vue'
+
+const { play } = useAudioPlayer()
 
 const clients = ref<string[]>([])
 
@@ -15,6 +18,11 @@ socket.on('findAllClients', (newClients: string[]) => {
 socket.on('getQueue', (newQueue: Song[]) => {
   store.queue = newQueue
 })
+
+const playFromQueue = (song: Song) => {
+  socket.emit('removeFromQueue', song._id)
+  play(song, true)
+}
 </script>
 
 <template>
@@ -26,6 +34,7 @@ socket.on('getQueue', (newQueue: Song[]) => {
       <div
         v-for="song in store.queue"
         class="song"
+        @click="playFromQueue(song)"
         @contextmenu="showContextMenu($event, song._id, 'queue')"
       >
         <div class="song__cover">

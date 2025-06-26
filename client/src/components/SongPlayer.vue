@@ -27,13 +27,22 @@ const handleVolume = (e: Event) => {
 
   setVolume(volume)
 }
+
+const previewCover = (coverPath: string) => {
+  store.previewCoverPath = getImageUrl(coverPath)
+}
 </script>
 
 <template>
   <div class="player">
     <div class="player__left">
       <div class="song__cover">
-        <img class="song__image" v-if="song.imagePath" :src="getImageUrl(song.imagePath)" />
+        <img
+          class="song__image"
+          v-if="song.imagePath"
+          :src="getImageUrl(song.imagePath)"
+          @click="previewCover(song.imagePath)"
+        />
         <Icon class="song__icon" v-else icon="heroicons:musical-note-16-solid" />
       </div>
       <div v-if="song.title">
@@ -154,6 +163,7 @@ const handleVolume = (e: Event) => {
   width: 50px;
   height: 50px;
   border-radius: 12px;
+  cursor: pointer;
 }
 
 .song__title:hover {

@@ -15,6 +15,7 @@ export const store = reactive<{
   contextedType: '' | 'song' | 'queue'
   isInRoom: boolean
   queue: Song[]
+  previewCoverPath: string
 }>({
   user: {} as User,
   playlists: [],
@@ -27,4 +28,5 @@ export const store = reactive<{
   contextedType: '',
   isInRoom: false,
   queue: [],
+  previewCoverPath: '',
 })

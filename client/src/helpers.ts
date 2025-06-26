@@ -57,9 +57,10 @@ export const fetchSongs = (url: string) => {
   return { isFetching, error, songs }
 }
 
-export const showContextMenu = (e: Event, songId: string) => {
+export const showContextMenu = (e: Event, songId: string, contextedType: 'song' | 'queue') => {
   e.preventDefault()
   store.contextedSongId = songId
+  store.contextedType = contextedType
 
   document.addEventListener('click', () => {
     store.contextedSongId = ''

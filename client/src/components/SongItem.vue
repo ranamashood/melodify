@@ -12,7 +12,11 @@ const { play } = useAudioPlayer()
 </script>
 
 <template>
-  <tr class="song" @click="play(song, true)" @contextmenu="showContextMenu($event, song._id)">
+  <tr
+    class="song"
+    @click="play(song, true)"
+    @contextmenu="showContextMenu($event, song._id, 'song')"
+  >
     <td class="song__cover">
       <img class="song__image" v-if="song.thumbnailPath" :src="getImageUrl(song.thumbnailPath)" />
       <Icon class="song__icon" v-else icon="heroicons:musical-note-16-solid" />

@@ -6,6 +6,9 @@ export interface ClientToServerEvents {
   play: (song?: Song) => void
   pause: () => void
   seek: (time: number) => void
+
+  addToQueue: (song: Song) => void
+  removeFromQueue: (songId: string) => void
 }
 
 export interface ServerToClientEvents {
@@ -14,4 +17,6 @@ export interface ServerToClientEvents {
   play: (song?: Song) => void
   pause: () => void
   seek: (time: number) => void
+
+  getQueue: (queue: Song[]) => void
 }

@@ -12,7 +12,9 @@ export const store = reactive<{
   isPaused: boolean
   volume: number
   contextedSongId: string
+  contextedType: '' | 'song' | 'queue'
   isInRoom: boolean
+  queue: Song[]
 }>({
   user: {} as User,
   playlists: [],
@@ -22,5 +24,7 @@ export const store = reactive<{
   isPaused: true,
   volume: 100,
   contextedSongId: '',
+  contextedType: '',
   isInRoom: false,
+  queue: [],
 })

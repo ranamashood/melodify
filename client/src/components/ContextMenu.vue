@@ -3,6 +3,7 @@ import { store } from '@/store'
 import { useFetch } from '@/helpers'
 import { useMouse } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
+import { socket } from '@/socketio.service'
 
 const contextedSongId = computed(() => store.contextedSongId)
 
@@ -42,21 +43,44 @@ const toggleLike = async (songId: string) => {
 const addToPlaylist = (playlistId: string, songId: string) => {
   useFetch(`${import.meta.env.VITE_BASE_URL}/playlist-songs`).post({ playlistId, songId })
 }
+
+const addToQueue = (songId: string) => {
+  const song = store.songs!.find((song) => song._id === songId)
+  socket.emit('addToQueue', song!)
+}
+
+const removeFromQueue = (songId: string) => {
+  socket.emit('removeFromQueue', songId)
+}
 </script>
 
 <template>
   <div class="menu" v-if="contextedSongId" :style="{ left: `${mouseX}px`, top: `${mouseY}px` }">
-    <button class="menu__item" @click="toggleLike(store.contextedSongId)">
-      {{ isLiked ? 'Remove from liked songs' : 'Add to liked songs' }}
-    </button>
-    <button
-      v-for="(playlist, index) in store.playlists"
-      class="menu__item"
-      @click="addToPlaylist(playlist._id, store.contextedSongId)"
-    >
-      {{ songExistsInPlaylists[index] ? 'Remove from' : 'Add to' }}
-      {{ playlist.name }}
-    </button>
+    <template v-if="store.contextedType === 'song'">
+      <button v-if="store.isInRoom" class="menu__item" @click="addToQueue(store.contextedSongId)">
+        Add to queue
+      </button>
+      <button class="menu__item" @click="toggleLike(store.contextedSongId)">
+        {{ isLiked ? 'Remove from liked songs' : 'Add to liked songs' }}
+      </button>
+      <button
+        v-for="(playlist, index) in store.playlists"
+        class="menu__item"
+        @click="addToPlaylist(playlist._id, store.contextedSongId)"
+      >
+        {{ songExistsInPlaylists[index] ? 'Remove from' : 'Add to' }}
+        {{ playlist.name }}
+      </button>
+    </template>
+    <template v-if="store.contextedType === 'queue'">
+      <button
+        v-if="store.isInRoom"
+        class="menu__item"
+        @click="removeFromQueue(store.contextedSongId)"
+      >
+        Remove from queue
+      </button>
+    </template>
   </div>
 </template>
 
@@ -68,6 +92,7 @@ const addToPlaylist = (playlistId: string, songId: string) => {
   border: 2px solid var(--primary-500);
   background-color: var(--background-50);
   border-radius: 12px;
+  z-index: 10;
 }
 
 .menu__item {

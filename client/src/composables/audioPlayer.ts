@@ -10,14 +10,16 @@ const { setMediaMetadata } = useMediaSession()
 let audio: HTMLAudioElement | null = null
 
 export function useAudioPlayer() {
-  socket.on('play', (song?: Song) => {
-    if (!song) {
-      store.isPaused = false
-      return
-    }
+  if (!socket.hasListeners('play')) {
+    socket.on('play', (song?: Song) => {
+      if (!song) {
+        store.isPaused = false
+        return
+      }
 
-    play(song)
-  })
+      play(song)
+    })
+  }
 
   socket.on('pause', () => {
     store.isPaused = true
@@ -52,9 +54,20 @@ export function useAudioPlayer() {
     const songUrl = getSongUrl(song._id)
     audio = new Audio(songUrl)
     audio.play()
+
     audio.addEventListener('timeupdate', () => {
       store.currentTime = Math.floor(audio?.currentTime || 0)
     })
+
+    audio.addEventListener('ended', () => {
+      if (!store.isInRoom) return
+      if (!store.queue.length) return
+
+      const song = store.queue.shift()
+      play(song!, store.isInRoom)
+      socket.emit('removeFromQueue', song!._id)
+    })
+
     store.isPaused = false
     store.currentSong = song
 
@@ -90,9 +103,17 @@ export function useAudioPlayer() {
       return
     }
 
-    const songs = store.songs
-    const currentIndex = songs.findIndex((song) => song._id === songId)
-    const nextSong = songs[currentIndex + 1]
+    let nextSong: Song
+
+    if (store.isInRoom) {
+      if (!store.queue.length) return
+      nextSong = store.queue.shift()!
+      socket.emit('removeFromQueue', nextSong!._id)
+    } else {
+      const songs = store.songs
+      const currentIndex = songs.findIndex((song) => song._id === songId)
+      nextSong = songs[currentIndex + 1]
+    }
 
     play(nextSong, store.isInRoom)
   }

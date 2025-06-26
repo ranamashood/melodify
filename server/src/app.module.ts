@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MusicModule } from './sockets/music/music.module';
 import { ClientsModule } from './sockets/clients/clients.module';
+import { QueueModule } from './sockets/queue/queue.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ClientsModule } from './sockets/clients/clients.module';
     UsersModule,
     MusicModule,
     ClientsModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

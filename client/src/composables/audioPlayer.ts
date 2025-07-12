@@ -53,6 +53,7 @@ export function useAudioPlayer() {
 
     const songUrl = getSongUrl(song._id)
     audio = new Audio(songUrl)
+    audio.volume = store.volume / 100
     audio.play()
 
     audio.addEventListener('timeupdate', () => {

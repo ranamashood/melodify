@@ -54,8 +54,16 @@ onMounted(() => {
   cursor: pointer;
 }
 
+.slider:hover {
+  height: 5px;
+}
+
 .slider::-webkit-slider-runnable-track {
   height: 3px;
+}
+
+.slider:hover::-webkit-slider-runnable-track {
+  height: 5px;
 }
 
 .slider::-webkit-slider-thumb {
@@ -71,8 +79,8 @@ onMounted(() => {
 }
 
 .slider:hover::-webkit-slider-thumb {
-  width: 12px;
-  height: 12px;
+  width: 15px;
+  height: 15px;
 }
 
 .slider::-moz-range-track {
@@ -94,7 +102,7 @@ onMounted(() => {
 }
 
 .slider:hover::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
+  width: 15px;
+  height: 15px;
 }
 </style>

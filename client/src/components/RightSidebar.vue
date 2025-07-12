@@ -69,6 +69,8 @@ const playFromQueue = (song: Song) => {
   flex-direction: column;
   gap: 10px;
   padding: 20px 10px;
+  max-height: 100vh;
+  overflow: auto;
 }
 
 .song {

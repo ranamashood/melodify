@@ -16,7 +16,12 @@ import { QueueModule } from './sockets/queue/queue.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath:
+        process.env.NODE_ENV === 'production'
+          ? '.env.production.local'
+          : '.env.development.local',
+    }),
     MongooseModule.forRoot('mongodb://localhost/melodifyDB'),
     ServeStaticModule.forRoot({
       rootPath: 'public/uploads/images',

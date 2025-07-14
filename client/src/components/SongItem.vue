@@ -3,6 +3,7 @@ import type { Song } from '@/types/Song.interface'
 import { Icon } from '@iconify/vue'
 import { useAudioPlayer } from '@/composables/audioPlayer'
 import { getImageUrl, showContextMenu } from '@/helpers'
+import { store } from '@/store'
 
 defineProps<{
   song: Song
@@ -14,6 +15,7 @@ const { play } = useAudioPlayer()
 <template>
   <tr
     class="song"
+    :class="{ 'song--active': store.currentSong._id === song._id }"
     @click="play(song, true)"
     @contextmenu="showContextMenu($event, song._id, 'song')"
   >
@@ -40,7 +42,8 @@ td {
   padding: 0 10px;
 }
 
-.song:hover {
+.song:hover,
+.song--active {
   background-color: var(--secondary-200);
   cursor: pointer;
 }

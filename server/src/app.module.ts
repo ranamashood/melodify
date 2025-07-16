@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MusicModule } from './sockets/music/music.module';
 import { ClientsModule } from './sockets/clients/clients.module';
 import { QueueModule } from './sockets/queue/queue.module';
+import { GenresModule } from './genres/genres.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { QueueModule } from './sockets/queue/queue.module';
     MusicModule,
     ClientsModule,
     QueueModule,
+    GenresModule,
   ],
   controllers: [AppController],
   providers: [AppService],

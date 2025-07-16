@@ -28,38 +28,21 @@ watch(
 </script>
 
 <template>
-  <div class="layout">
-    <aside>
-      <LeftSidebar />
-    </aside>
-    <main>
-      <SongsList />
-    </main>
-    <aside>
-      <RightSidebar />
-    </aside>
-    <SeekBar />
-    <div
-      class="cover-preview"
-      :class="{ 'cover-preview--active': store.previewCoverPath }"
-      @click="closeCoverPreview()"
-    >
-      <img class="cover-preview__image" :src="previewCoverPath" @click.stop />
-    </div>
+  <SongsList />
+  <div
+    class="cover-preview"
+    :class="{ 'cover-preview--active': store.previewCoverPath }"
+    @click="closeCoverPreview()"
+  >
+    <img class="cover-preview__image" :src="previewCoverPath" @click.stop />
   </div>
 </template>
 
 <style scoped>
-.layout {
-  display: flex;
-}
-
-main {
-  flex: 1;
-}
-
 .cover-preview {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   transform: translate(0, 100%);
@@ -70,6 +53,7 @@ main {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  z-index: 10;
 }
 
 .cover-preview--active {

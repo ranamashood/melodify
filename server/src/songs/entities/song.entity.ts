@@ -15,6 +15,9 @@ export class Song {
   artists: string[];
 
   @Prop()
+  genres: string[];
+
+  @Prop()
   duration: number;
 
   @Prop()

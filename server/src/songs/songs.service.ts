@@ -51,7 +51,7 @@ export class SongsService {
 
     const metadata = await parseFile(`/home/mashood/Music/${filename}`);
 
-    const { title, artist, artists, picture } = metadata.common;
+    const { title, artist, artists, picture, genre: genres } = metadata.common;
     const duration = Math.floor(metadata.format.duration || 0);
 
     const coverImage = selectCover(picture);
@@ -90,6 +90,7 @@ export class SongsService {
       title,
       artist,
       artists,
+      genres,
       duration,
       durationFormatted,
       imagePath,

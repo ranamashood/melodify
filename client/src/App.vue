@@ -3,6 +3,9 @@ import { onMounted, watch } from 'vue'
 import { useFetch } from './helpers'
 import { store } from './store'
 import { useRoute, useRouter } from 'vue-router'
+import LeftSidebar from '@/components/LeftSidebar.vue'
+import RightSidebar from '@/components/RightSidebar.vue'
+import SeekBar from '@/components/SongPlayer.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -33,5 +36,26 @@ watch(
 </script>
 
 <template>
-  <router-view />
+  <div class="layout">
+    <aside>
+      <LeftSidebar />
+    </aside>
+    <main>
+      <router-view />
+    </main>
+    <aside>
+      <RightSidebar />
+    </aside>
+    <SeekBar />
+  </div>
 </template>
+
+<style scoped>
+.layout {
+  display: flex;
+}
+
+main {
+  flex: 1;
+}
+</style>

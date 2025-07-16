@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PlaylistView from '@/views/PlaylistView.vue'
 import AuthView from '@/views/AuthView.vue'
+import GenresView from '@/views/GenresView.vue'
+import GenreView from '@/views/GenreView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +33,16 @@ const router = createRouter({
       path: '/playlist/:id',
       name: 'playlist',
       component: PlaylistView,
+    },
+    {
+      path: '/genre',
+      name: 'genre',
+      component: GenresView,
+    },
+    {
+      path: '/genre/:name',
+      name: 'genrePage',
+      component: GenreView,
     },
   ],
 })

@@ -46,6 +46,10 @@ const goToPlaylist = (id: string) => {
   router.push({ name: 'playlist', params: { id } })
 }
 
+const goToGenres = () => {
+  router.push({ name: 'genre' })
+}
+
 const joinRoom = () => {
   socket.connect()
   store.isInRoom = true
@@ -79,6 +83,14 @@ const leaveRoom = () => {
     >
       <Icon class="sidebar__icon" icon="heroicons:musical-note-16-solid" />
       All Songs
+    </button>
+    <button
+      class="sidebar__button"
+      :class="{ 'sidebar__button--active': activeRoute === '/genre' }"
+      @click="goToGenres()"
+    >
+      <Icon class="sidebar__icon" icon="heroicons:rectangle-group-16-solid" />
+      Genres
     </button>
     <button
       class="sidebar__button"

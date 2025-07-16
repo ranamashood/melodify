@@ -57,5 +57,7 @@ watch(
 
 main {
   flex: 1;
+  padding-top: 20px;
+  padding-bottom: 120px;
 }
 </style>

@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import LeftSidebar from '@/components/LeftSidebar.vue'
-import RightSidebar from '@/components/RightSidebar.vue'
-import SeekBar from '@/components/SongPlayer.vue'
 import SongsList from '@/components/SongsList.vue'
 import { store } from '@/store'
 import { onKeyStroke } from '@vueuse/core'
-import { ref, watch } from 'vue'
-
-const previewCoverPath = ref('')
 
 const closeCoverPreview = () => {
   store.previewCoverPath = ''
@@ -16,26 +10,15 @@ const closeCoverPreview = () => {
 onKeyStroke('Escape', (e) => {
   closeCoverPreview()
 })
-
-watch(
-  () => store.previewCoverPath,
-  (newPreviewCoverPath) => {
-    if (newPreviewCoverPath) {
-      previewCoverPath.value = newPreviewCoverPath
-    }
-  },
-)
 </script>
 
 <template>
+  <Transition name="pop-in">
+    <div class="cover-preview" @click="closeCoverPreview()" v-if="store.previewCoverPath">
+      <img class="cover-preview__image" :src="store.previewCoverPath" @click.stop />
+    </div>
+  </Transition>
   <SongsList />
-  <div
-    class="cover-preview"
-    :class="{ 'cover-preview--active': store.previewCoverPath }"
-    @click="closeCoverPreview()"
-  >
-    <img class="cover-preview__image" :src="previewCoverPath" @click.stop />
-  </div>
 </template>
 
 <style scoped>
@@ -45,8 +28,6 @@ watch(
   left: 0;
   width: 100vw;
   height: 100vh;
-  transform: translate(0, 100%);
-  transition: transform 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
   /* From https://css.glass */
   background: var(--secondary-300-alpha);
@@ -56,10 +37,6 @@ watch(
   z-index: 10;
 }
 
-.cover-preview--active {
-  transform: translate(0, 0);
-}
-
 .cover-preview__image {
   position: absolute;
   top: 50%;
@@ -67,5 +44,24 @@ watch(
   transform: translate(-50%, -50%);
   border-radius: 50px;
   user-select: none;
+}
+
+.pop-in-enter-active,
+.pop-in-leave-active {
+  transition: all 100ms;
+}
+
+.pop-in-enter-from,
+.pop-in-leave-to {
+  border-radius: 50px;
+  transform: scale(0.8);
+  opacity: 0;
+}
+
+.pop-in-enter-to,
+.pop-in-leave-from {
+  border-radius: 0;
+  transform: scale(1);
+  opacity: 1;
 }
 </style>

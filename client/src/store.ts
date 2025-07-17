@@ -6,7 +6,7 @@ import type { User } from './types/User.interface'
 export const store = reactive<{
   user: User
   playlists: Playlist[] | null
-  songs: Song[] | null
+  songs: Song[]
   currentSong: Song
   currentTime: number
   isPaused: boolean

@@ -37,11 +37,23 @@ watch(contextedSongId, async (newContextedSongId) => {
 })
 
 const toggleLike = async (songId: string) => {
-  await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${songId}`).post()
+  const { data } = await useFetch(`${import.meta.env.VITE_BASE_URL}/likes/${songId}`)
+    .post()
+    .json()
+
+  if (!data.value.isLiked) {
+    store.songs = store.songs.filter((song) => song._id !== songId)
+  }
 }
 
-const addToPlaylist = (playlistId: string, songId: string) => {
-  useFetch(`${import.meta.env.VITE_BASE_URL}/playlist-songs`).post({ playlistId, songId })
+const addToPlaylist = async (playlistId: string, songId: string) => {
+  const { data } = await useFetch(`${import.meta.env.VITE_BASE_URL}/playlist-songs`)
+    .post({ playlistId, songId })
+    .json()
+
+  if (!data.value.isSongExists) {
+    store.songs = store.songs.filter((song) => song._id !== songId)
+  }
 }
 
 const addToQueue = (songId: string) => {

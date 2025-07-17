@@ -51,7 +51,7 @@ export const fetchSongs = (url: string) => {
     .json<Song[]>()
 
   watch(songs, (newSongs) => {
-    store.songs = newSongs
+    store.songs = newSongs ?? []
   })
 
   return { isFetching, error, songs }
